@@ -1,0 +1,56 @@
+/* Floating centered panel - does NOT fill entire screen */
+.sbmu-frame-root {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 8px;
+  box-sizing: border-box;
+  /* AR camera visible behind - no fullscreen overlay */
+}
+
+/* Single rounded white card that contains banner + video */
+.sbmu-card {
+  max-width: 420px;
+  width: 100%;
+  margin: 12px auto;
+  border-radius: 26px;
+  overflow: hidden;
+  background: white;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.18);
+  display: flex;
+  flex-direction: column;
+  /* No fullscreen - floating panel */
+}
+
+/* Top banner image - PNG defines rounded top */
+.sbmu-card__banner {
+  width: 100%;
+  display: block;
+  height: auto;
+  border-radius: 0; /* Banner PNG has its own rounded corners */
+  margin: 0;
+  padding: 0;
+}
+
+/* Bottom video - sits directly under banner */
+.sbmu-card__video {
+  width: 100%;
+  height: auto !important;
+  display: block;
+  object-fit: cover;
+  border-radius: 0; /* Radius handled by .sbmu-card */
+  margin: 0;
+  padding: 0;
+  /* Video adapts to panel, never fullscreen */
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .sbmu-frame-root {
+    padding: 8px;
+  }
+
+  .sbmu-card {
+    margin: 12px auto;
+  }
+}

@@ -1,0 +1,243 @@
+.app-container {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  background: #000;
+}
+
+.camera-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  background: #000;
+}
+
+.canvas-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 55% !important;
+  height: 55% !important;
+  max-width: 400px !important;
+  max-height: 600px !important;
+  z-index: 1;
+  pointer-events: none;
+  /* Camera feed visible around canvas */
+}
+
+.canvas-overlay canvas {
+  pointer-events: auto;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+}
+
+/* Scene container - the actual wrapper that was fullscreen */
+.scene-container {
+  position: absolute !important;
+  top: 45% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: 70% !important;
+  height: 70% !important;
+  max-width: 500px !important;
+  max-height: 750px !important;
+  min-width: 250px !important;
+  min-height: 400px !important;
+  z-index: 1 !important;
+  pointer-events: auto !important;
+  overflow: visible !important;
+  background: transparent !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  /* Shifted up slightly for equal top/bottom spacing */
+  box-sizing: border-box !important;
+}
+
+/* Responsive scene container */
+@media (orientation: landscape) {
+  .scene-container {
+    width: 65% !important;
+    height: 65% !important;
+    max-width: 700px !important;
+    max-height: 450px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .scene-container {
+    width: 75% !important;
+    height: 75% !important;
+  }
+}
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  transition: opacity 0.5s ease-out;
+}
+
+.loading-overlay.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.loading-subtext {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+  text-align: center;
+  max-width: 300px;
+  line-height: 1.4;
+}
+
+.error-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1001;
+}
+
+.error-content {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 40px;
+  max-width: 90%;
+  text-align: center;
+  color: white;
+}
+
+.error-content h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
+.error-content p {
+  margin-bottom: 30px;
+  line-height: 1.6;
+}
+
+.error-content button {
+  background: #007AFF;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.error-content button:hover {
+  background: #0056CC;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .loading-text {
+    font-size: 16px;
+  }
+  
+  .loading-subtext {
+    font-size: 13px;
+    max-width: 280px;
+  }
+  
+  .error-content {
+    padding: 30px 20px;
+  }
+  
+  .error-content h2 {
+    font-size: 20px;
+  }
+}
+
+/* Responsive canvas - keep smaller so camera is visible */
+@media (orientation: landscape) {
+  .canvas-overlay {
+    width: 50% !important;
+    height: 50% !important;
+    max-width: 600px !important;
+    max-height: 350px !important;
+  }
+}
+
+@media (orientation: portrait) {
+  .canvas-overlay {
+    width: 55% !important;
+    height: 55% !important;
+    max-width: 400px !important;
+    max-height: 600px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .canvas-overlay {
+    width: 60% !important;
+    height: 60% !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+  }
+}
+
+/* Prevent text selection */
+* {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+

@@ -1,0 +1,53 @@
+/* Floating centered panel - does NOT fill entire screen */
+.ar-frame {
+  max-width: 420px;
+  width: 100%;
+  margin: 12px auto;
+  border-radius: 26px;
+  overflow: hidden;
+  background: white;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.18);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 10;
+  /* AR camera visible behind - no fullscreen overlay */
+  /* No fullscreen - floating panel */
+}
+
+/* Top banner image - PNG defines rounded top */
+.banner {
+  width: 100%;
+  display: block;
+  height: auto;
+  border-radius: 0; /* Banner PNG has its own rounded corners */
+  margin: 0;
+  padding: 0;
+  /* No extra glossy borders */
+}
+
+/* Bottom video - sits directly under banner inside same container */
+.video {
+  width: 100%;
+  height: auto !important;
+  display: block;
+  object-fit: cover;
+  border-radius: 0; /* Radius handled by .ar-frame */
+  margin: 0;
+  padding: 0;
+  /* Video adapts to panel, never fullscreen */
+  /* Smooth transitions to prevent blank frames */
+  transition: opacity 0.3s ease-in-out;
+  opacity: 1;
+  will-change: opacity;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .ar-frame {
+    margin: 12px auto;
+    width: calc(100% - 16px); /* Account for 8px padding on each side */
+  }
+}

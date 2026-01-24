@@ -1,0 +1,177 @@
+/* Frame Wrapper - contains swipe box, canvas, and learn button */
+.frame-wrapper {
+  width: min(92%, 420px);
+  margin: 0 auto;
+  padding-top: 70px;      /* space for swipe box */
+  padding-bottom: 80px;   /* space for learn more */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.canvas-holder {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.swipe-box {
+  position: absolute;
+  top: 10px;
+  width: clamp(180px, 70%, 320px);
+  padding: 12px 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 22px;
+  background: rgba(255,255,255,0.22);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  z-index: 20;
+  color: white;
+  font-size: clamp(12px, 3vw, 16px);
+  font-weight: 600;
+  pointer-events: auto;
+}
+
+.learn-btn {
+  position: absolute;
+  bottom: 10px;
+  width: clamp(140px, 60%, 260px);
+  padding: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 22px;
+  background: rgba(255,255,255,0.22);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  z-index: 20;
+  color: white;
+  font-size: clamp(14px, 3vw, 18px);
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+/* Map existing SwipeInstruction component to swipe-box styling - OVERRIDE ALL OLD STYLES */
+.frame-wrapper .swipe-instruction {
+  position: absolute !important;
+  top: 10px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: clamp(280px, 85%, 400px) !important;
+  z-index: 20 !important;
+  margin: 0 !important;
+  opacity: 1 !important;
+  max-width: 95% !important;
+  pointer-events: auto !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  /* Override old fixed positioning */
+  background: transparent !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  font-size: inherit !important;
+  font-weight: inherit !important;
+}
+
+.frame-wrapper .swipe-instruction-content {
+  background: rgba(60, 60, 60, 0.9) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border-radius: 26px !important;
+  padding: 14px 20px !important;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.4) !important;
+  border: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+  min-width: auto !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+  /* Override old transparent background */
+  background: rgba(60, 60, 60, 0.9) !important;
+}
+
+.frame-wrapper .swipe-instruction-text {
+  font-size: clamp(13px, 2.5vw, 15px) !important;
+  font-weight: 500 !important;
+  color: white !important;
+  text-align: left !important;
+  white-space: nowrap !important;
+  flex: 1 !important;
+  letter-spacing: 0.2px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: block !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.frame-wrapper .swipe-instruction-close {
+  background: rgba(80, 80, 80, 0.7) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 50% !important;
+  width: 24px !important;
+  height: 24px !important;
+  min-width: 24px !important;
+  min-height: 24px !important;
+  max-width: 24px !important;
+  max-height: 24px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  color: white !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  margin-left: 10px !important;
+  flex-shrink: 0 !important;
+  transition: all 0.2s ease !important;
+  -webkit-tap-highlight-color: transparent !important;
+  touch-action: manipulation !important;
+}
+
+.frame-wrapper .swipe-instruction-close:hover {
+  background: rgba(100, 100, 100, 0.8) !important;
+  transform: scale(1.08) !important;
+}
+
+.frame-wrapper .swipe-instruction-close:active {
+  transform: scale(0.92) !important;
+  background: rgba(70, 70, 70, 0.8) !important;
+}
+
+.frame-wrapper .swipe-instruction-close svg {
+  width: 12px !important;
+  height: 12px !important;
+  stroke: currentColor !important;
+  stroke-width: 2.5 !important;
+  pointer-events: none !important;
+}
+
+/* Map existing FloatingCTA component to learn-btn styling */
+.frame-wrapper .floating-cta,
+.frame-wrapper .learn-more-btn {
+  position: absolute !important;
+  bottom: 10px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: clamp(140px, 60%, 260px) !important;
+  padding: 12px !important;
+  border-radius: 22px !important;
+  background: rgba(255,255,255,0.22) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  z-index: 20 !important;
+  margin: 0 !important;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.25) !important;
+}
+

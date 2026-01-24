@@ -1,0 +1,15 @@
+.sbmu-banner-container {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  z-index: 50;
+  pointer-events: none;
+}
+
+.sbmu-banner {
+  width: 90%;
+  max-width: 700px;
+  object-fit: contain;
+}

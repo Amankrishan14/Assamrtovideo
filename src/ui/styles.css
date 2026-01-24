@@ -1,0 +1,1457 @@
+/* Premium Mobile-First WebAR UI - TikTok/Instagram Reels/VisionOS Style */
+
+/* ============================================
+   GLOBAL TOUCH ACTION - UNBLOCK TOUCH INTERACTION
+   ============================================ */
+* {
+  touch-action: pan-y !important;
+}
+
+html, body {
+  touch-action: pan-y !important;
+  overscroll-behavior: none !important;
+}
+
+/* ============================================
+   BASE LAYER - Safe Area Support
+   ============================================ */
+.ar-ui-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none !important;
+  z-index: 10;
+  /* Safe area insets for iOS notch/Dynamic Island/home gesture bar */
+  padding-top: env(safe-area-inset-top);
+  padding-right: env(safe-area-inset-right);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  /* Mobile optimizations */
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: none;
+  -webkit-tap-highlight-color: transparent;
+  /* Perfect alignment */
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* ============================================
+   TOP NAV - Glass Header
+   ============================================ */
+.top-nav {
+  position: absolute;
+  top: env(safe-area-inset-top);
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  height: 54px;
+  padding: 0 16px;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  z-index: 15;
+}
+
+.top-nav button {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 12px;
+  transition: background 0.2s ease;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.top-nav button:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.top-nav button:active {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.top-nav .logo {
+  font-size: 15px;
+  font-weight: 700;
+  color: white;
+  letter-spacing: -0.5px;
+}
+
+/* ============================================
+   MOBILE-FIRST CANVAS OVERLAY
+   ============================================ */
+.canvas-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 55% !important;
+  height: 55% !important;
+  max-width: 400px !important;
+  max-height: 600px !important;
+  z-index: 1;
+  pointer-events: auto;
+  /* Mobile optimization */
+  -webkit-tap-highlight-color: transparent;
+  touch-action: pan-y;
+  overflow: hidden;
+  /* Camera feed visible around canvas */
+}
+
+/* Curved cylinder background container */
+.cylinder-video-carousel::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 110%;
+  height: 110%;
+  background: linear-gradient(
+    135deg,
+    rgba(30, 30, 40, 0.6) 0%,
+    rgba(20, 20, 30, 0.8) 50%,
+    rgba(30, 30, 40, 0.6) 100%
+  );
+  border-radius: 60px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    inset 0 0 80px rgba(0, 0, 0, 0.5),
+    0 30px 100px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  pointer-events: none;
+  z-index: 0;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.cylinder-video-carousel:active {
+  cursor: grabbing;
+}
+
+/* Radial glow behind cylinder */
+.cylinder-glow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 120%;
+  height: 120%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(106, 90, 249, 0.15) 0%,
+    rgba(106, 90, 249, 0.08) 30%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: -1;
+  animation: pulseGlow 4s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+}
+
+/* Shadow under cylinder */
+.cylinder-shadow {
+  position: absolute;
+  left: 50%;
+  top: 60%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 20%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 0, 0, 0.4) 0%,
+    rgba(0, 0, 0, 0.2) 50%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: -2;
+  filter: blur(20px);
+  -webkit-filter: blur(20px);
+}
+
+/* Cylinder container */
+.cylinder-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+  min-height: 400px;
+  z-index: 1;
+}
+
+.cylinder {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+  transform-origin: center center;
+  min-height: 400px;
+  z-index: 1;
+}
+
+/* Cylinder face - Mobile optimized */
+.cylinder-face {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform-origin: center center;
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+  backface-visibility: visible;
+  -webkit-backface-visibility: visible;
+  width: 90%;
+  max-width: 90%;
+  height: auto;
+  aspect-ratio: 9 / 16; /* Vertical video for mobile */
+  pointer-events: auto;
+  z-index: 2;
+  /* Mobile optimization */
+  will-change: transform, opacity;
+  -webkit-backface-visibility: hidden;
+}
+
+.face-video-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 25px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 
+    0 20px 50px rgba(0, 0, 0, 0.4),
+    0 0 40px rgba(106, 90, 249, 0.2),
+    inset 0 0 30px rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+  /* Mobile: simpler curved edges */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+}
+
+.cylinder-face.active .face-video-wrapper {
+  box-shadow: 
+    0 35px 80px rgba(0, 0, 0, 0.6),
+    0 0 80px rgba(106, 90, 249, 0.4),
+    inset 0 0 50px rgba(255, 255, 255, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  border-color: rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.face-video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  border-radius: 30px;
+  transition: all 0.3s ease;
+}
+
+.face-label {
+  position: absolute;
+  bottom: -45px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.75);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ============================================
+   CURVED MAIN VIDEO - Center Surface
+   ============================================ */
+.curved-main-video {
+  position: relative;
+  max-width: 420px;
+  width: 100%;
+  margin: 12px auto;
+  border-radius: 26px;
+  overflow: hidden;
+  background: white;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.18);
+  pointer-events: auto;
+  height: auto;
+  /* No fullscreen - floating panel */
+}
+
+.curved-main-video video {
+  width: 100%;
+  height: auto !important;
+  display: block;
+  object-fit: cover;
+  border-radius: 0;
+  /* Video adapts to panel, never fullscreen */
+}
+
+.curved-main-video .video-blur-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  filter: blur(20px);
+  opacity: 0.4;
+  z-index: -1;
+  transform: scale(1.1);
+}
+
+.curved-main-video .video-label {
+  position: absolute;
+  bottom: -45px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* ============================================
+   CURVED SIDE PANEL - Depth Effect
+   ============================================ */
+.curved-side-panel {
+  position: absolute;
+  right: 10%;
+  top: 50%;
+  transform: translateY(-50%) rotateY(-40deg) translateZ(-20px);
+  pointer-events: auto;
+  width: 35%;
+  max-width: 35%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  border-radius: 25px;
+  box-shadow: 
+    0 15px 40px rgba(0, 0, 0, 0.3),
+    0 0 30px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  overflow: hidden;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+  transition: all 0.3s ease;
+}
+
+.curved-side-panel:hover {
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: 
+    0 20px 50px rgba(0, 0, 0, 0.4),
+    0 0 40px rgba(106, 90, 249, 0.15);
+}
+
+.curved-side-panel .side-panel-video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  border-radius: 25px;
+  filter: brightness(0.7);
+}
+
+.curved-side-panel .side-panel-label {
+  position: absolute;
+  bottom: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* ============================================
+   VIDEO CARD - Thumbnail Cards
+   ============================================ */
+.video-card {
+  position: relative;
+  width: 100%;
+  height: auto;
+  min-height: 90px;
+  aspect-ratio: 16 / 9;
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+              box-shadow 0.3s ease;
+  background: rgba(26, 26, 26, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  pointer-events: auto;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.video-card:active {
+  transform: scale(0.98);
+}
+
+.video-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.video-card.active {
+  transform: scale(1.05);
+  border-color: rgba(99, 102, 241, 0.8);
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.5), 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.video-card video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.video-card .card-blur-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  filter: blur(10px);
+  opacity: 0.3;
+  z-index: -1;
+  transform: scale(1.05);
+}
+
+.video-card .card-label {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.75), transparent);
+  color: white;
+  padding: 6px 8px;
+  font-size: 10px;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.video-card.active .card-label {
+  color: #a5b4fc;
+}
+
+/* ============================================
+   CURVED CIRCULAR SELECTOR - Floating on Surface
+   ============================================ */
+.curved-circular-selector {
+  position: absolute;
+  bottom: 15%;
+  left: 8%;
+  pointer-events: auto;
+  width: auto;
+  height: auto;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: pan-y;
+  -webkit-tap-highlight-color: transparent;
+  transform: translateZ(45px);
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+}
+
+.circular-wheel {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+  overflow: visible;
+}
+
+.circular-thumb {
+  position: absolute;
+  width: 75px;
+  height: 75px;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+  pointer-events: auto;
+  flex-shrink: 0;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.circular-thumb.active {
+  border-color: rgba(106, 90, 249, 0.8);
+  box-shadow: 
+    0 0 30px rgba(106, 90, 249, 0.6),
+    0 0 60px rgba(106, 90, 249, 0.3),
+    0 12px 32px rgba(0, 0, 0, 0.4);
+  z-index: 2;
+}
+
+.circular-thumb:not(.active) {
+  box-shadow: 
+    0 4px 16px rgba(0, 0, 0, 0.25),
+    0 0 20px rgba(0, 0, 0, 0.15);
+  z-index: 1;
+}
+
+.circular-thumb:hover {
+  cursor: pointer;
+}
+
+.circular-thumb.active:hover {
+  box-shadow: 
+    0 0 40px rgba(106, 90, 249, 0.8),
+    0 0 80px rgba(106, 90, 249, 0.4),
+    0 12px 32px rgba(0, 0, 0, 0.4);
+}
+
+.circular-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 50%;
+}
+
+.circular-glow {
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  bottom: -4px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(106, 90, 249, 0.5) 0%, rgba(106, 90, 249, 0.2) 50%, transparent 80%);
+  pointer-events: none;
+  z-index: -1;
+  animation: pulseGlow 2s ease-in-out infinite;
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+}
+
+/* ============================================
+   FLOATING CTA - Mobile-First VisionOS Style
+   ============================================ */
+.floating-cta {
+  position: fixed;
+  /* Proportional bottom spacing - maintains same ratio as video spacing */
+  bottom: calc(env(safe-area-inset-bottom) + 5vh);
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: auto !important;
+  /* Width proportional to video container - same ratio */
+  width: 85vw;
+  max-width: 400px;
+  /* Height proportional to viewport - maintains aspect */
+  height: calc(52px + (100vh - 600px) * 0.015);
+  min-height: 50px;
+  max-height: 58px;
+  padding: 0 32px;
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 28px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 
+    0 12px 40px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(255, 255, 255, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  opacity: 0;
+  animation: fadeInUp 0.5s ease forwards;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Ensure no overlap with video */
+  margin-bottom: 0;
+}
+
+.floating-cta.visible {
+  opacity: 1;
+}
+
+.floating-cta:hover {
+  transform: translateX(-50%) translateY(-4px) scale(1.02);
+  box-shadow: 
+    0 16px 50px rgba(0, 0, 0, 0.4),
+    0 0 30px rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.floating-cta:active {
+  transform: translateX(-50%) translateY(-2px) scale(0.98);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* ============================================
+   RESPONSIVE BREAKPOINTS
+   ============================================ */
+
+/* Small Phones (iPhone SE, small Android) - Mobile First */
+@media (max-width: 480px) {
+  .floating-cta {
+    width: 90vw;
+    max-width: 90vw;
+    height: calc(50px + (100vh - 600px) * 0.01);
+    min-height: 48px;
+    max-height: 54px;
+    font-size: 15px;
+    padding: 0 28px;
+    /* Proportional spacing - maintains same ratio */
+    bottom: calc(env(safe-area-inset-bottom) + 4.5vh);
+  }
+
+  .side-panel {
+    right: 2vw;
+    width: 26vw;
+    max-width: 100px;
+    padding: 10px;
+    gap: 10px;
+    max-height: 75vh;
+    margin-top: 8vh;
+  }
+
+  .video-card {
+    min-height: 80px;
+    border-radius: 12px;
+  }
+
+  .video-card .card-label {
+    font-size: 9px;
+    padding: 4px 6px;
+  }
+
+  .circular-selector {
+    bottom: calc(env(safe-area-inset-bottom) + 70px);
+    max-width: 200px;
+    height: 100px;
+    perspective: 600px;
+    -webkit-perspective: 600px;
+  }
+
+
+  .top-nav {
+    height: 48px;
+    padding: 0 14px;
+    gap: 10px;
+  }
+
+  .top-nav button {
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+
+  .top-nav .logo {
+    font-size: 14px;
+  }
+}
+
+/* Tablets */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .cylinder-video-carousel {
+    width: 85vw;
+    max-width: 85vw;
+    perspective: 1400px;
+    -webkit-perspective: 1400px;
+  }
+
+  .cylinder-face {
+    width: 58%;
+    max-width: 58%;
+  }
+
+  .face-video-wrapper {
+    border-radius: 28px;
+  }
+
+  .floating-cta {
+    width: 65vw;
+    max-width: 350px;
+    height: 50px;
+    font-size: 16px;
+  }
+
+  .top-nav {
+    height: 56px;
+    padding: 0 18px;
+  }
+
+  .top-nav .logo {
+    font-size: 16px;
+  }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+  .cylinder-video-carousel {
+    width: 80vw;
+    max-width: 1200px;
+    perspective: 1500px;
+    -webkit-perspective: 1500px;
+  }
+
+  .cylinder-face {
+    width: 55%;
+    max-width: 55%;
+  }
+
+  .face-video-wrapper {
+    border-radius: 30px;
+  }
+
+  .floating-cta {
+    width: 420px;
+    max-width: 420px;
+    height: 52px;
+    font-size: 16px;
+    border-radius: 26px;
+  }
+
+  .top-nav {
+    height: 58px;
+    padding: 0 20px;
+    gap: 16px;
+  }
+
+  .top-nav button {
+    font-size: 15px;
+    padding: 10px 16px;
+  }
+
+  .top-nav .logo {
+    font-size: 17px;
+  }
+}
+
+/* Landscape Orientation - Mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+  .smart-video-frame {
+    max-height: 85vh;
+    width: 85vw;
+    margin-top: 4vh;
+  }
+
+  .side-panel {
+    max-height: 85vh;
+    width: 25vw;
+    max-width: 110px;
+    margin-top: 8vh;
+  }
+
+  .floating-cta {
+    bottom: calc(env(safe-area-inset-bottom) + 12px);
+    height: 44px;
+    padding: 0 20px;
+  }
+
+  .top-nav {
+    height: 48px;
+  }
+}
+
+/* High DPI Displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .smart-video-frame,
+  .side-panel,
+  .video-card,
+  .floating-cta,
+  .top-nav {
+    border-width: 0.5px;
+  }
+}
+
+/* ============================================
+   FLOATING GLASS VIDEO PANEL
+   ============================================ */
+.floating-glass-video-container {
+  position: absolute;
+  /* Position video below banner with proper spacing */
+  /* Banner is ~300px + 4vh top + 30px overflow, so video starts around 340px from top */
+  top: calc(4vh + 340px);
+  left: 50%;
+  transform: translateX(-50%);
+  /* Consistent width proportion - same ratio on all devices */
+  width: 85%;
+  max-width: 85vw;
+  /* Height maintains aspect ratio - ensures button never overlaps */
+  max-height: 50vh;
+  pointer-events: none;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  user-select: none;
+  -webkit-user-select: none;
+  right: auto;
+  bottom: auto;
+  transform-origin: center center;
+  touch-action: none;
+}
+
+.glass-video-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120%;
+  height: 120%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(255, 255, 255, 0.05) 40%,
+    transparent 70%
+  );
+  filter: blur(50px);
+  opacity: 0.25;
+  pointer-events: none;
+  z-index: -1;
+  /* Perfect centering */
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.glass-video-panel {
+  position: relative;
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  border-radius: 28px;
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(18px) brightness(1.25);
+  -webkit-backdrop-filter: blur(18px) brightness(1.25);
+  box-shadow: 
+    0 8px 20px rgba(0, 0, 0, 0.35),
+    inset 0 2px 12px rgba(255, 255, 255, 0.15);
+  overflow: hidden;
+  transform-style: preserve-3d;
+  transform: translateX(0) rotateY(0deg);
+  /* Perfect alignment - center content */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  padding: 0;
+  box-sizing: border-box;
+  /* Performance optimizations */
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  perspective: 1000px;
+  -webkit-perspective: 1000px;
+  /* Touch optimizations */
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  cursor: grab;
+  /* Smooth transitions - always visible, no blank frames */
+  opacity: 1 !important;
+  transition: transform 0.2s ease-out;
+}
+
+.glass-video-panel:active {
+  cursor: grabbing;
+}
+
+/* Prevent text selection during drag */
+.glass-video-panel.dragging {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+.glass-video {
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  max-height: 55vh;
+  display: block;
+  object-fit: contain;
+  object-position: center center;
+  border-radius: 28px;
+  pointer-events: none;
+  /* Perfect alignment - centered within panel via flexbox */
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  /* Performance optimizations */
+  will-change: opacity, transform;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  /* Prevent video controls on mobile */
+  -webkit-playsinline: true;
+  playsinline: true;
+  /* Ensure proper aspect ratio */
+  aspect-ratio: auto;
+  /* Smooth transitions - no blank frames */
+  opacity: 1;
+  transition: opacity 0.2s ease-out;
+  -webkit-transition: opacity 0.2s ease-out;
+  /* Prevent flickering */
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Smooth sheen effect */
+.glass-video-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  transition: left 0.6s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.glass-video-panel:hover::before {
+  left: 100%;
+}
+
+/* ============================================
+   SWIPE INSTRUCTION POPUP
+   ============================================ */
+.swipe-instruction,
+.swipe-tip {
+  position: fixed;
+  top: calc(env(safe-area-inset-top, 10px) + 20px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  background: rgba(255,255,255,0.28);
+  padding: 12px 22px;
+  border-radius: 22px;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+  font-size: clamp(12px, 3vw, 16px);
+  font-weight: 600;
+  color: white;
+  pointer-events: auto !important;
+  opacity: 0;
+  width: auto;
+  max-width: 90%;
+  white-space: nowrap;
+}
+
+.swipe-instruction-content {
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-radius: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: none;
+  border: none;
+  min-width: auto;
+  width: 100%;
+}
+
+.swipe-instruction-text {
+  font-size: clamp(12px, 3vw, 16px);
+  font-weight: 600;
+  color: white;
+  text-align: center;
+  white-space: nowrap;
+  flex: 1;
+  letter-spacing: 0.2px;
+}
+
+.swipe-instruction-close {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.9);
+  padding: 0;
+  margin: 0;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.swipe-instruction-close:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+
+.swipe-instruction-close:active {
+  transform: scale(0.95);
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.swipe-instruction-close svg {
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+}
+
+/* ============================================
+   UPDATED CTA BUTTON (GLASS STYLE)
+   ============================================ */
+.floating-cta,
+.learn-more-btn {
+  position: fixed;
+  bottom: calc(env(safe-area-inset-bottom, 20px) + 25px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  width: clamp(160px, 45vw, 260px);
+  padding: 12px 20px;
+  border-radius: 25px;
+  background: rgba(255,255,255,0.28);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  text-align: center;
+  font-size: clamp(14px, 3vw, 18px);
+  font-weight: 600;
+  color: white;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  pointer-events: auto !important;
+  margin: 0;
+}
+
+.floating-cta.visible {
+  opacity: 1;
+}
+
+.floating-cta:hover {
+  background: linear-gradient(135deg, rgba(255,255,255,0.45), rgba(255,255,255,0.25));
+  box-shadow: 0 6px 16px rgba(0,0,0,0.35);
+  transform: translateX(-50%) translateY(-2px);
+}
+
+.floating-cta:active {
+  transform: translateX(-50%) translateY(0);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+/* Mobile optimizations - Maintain proportional spacing, no overlap */
+@media (max-width: 480px) {
+  .floating-glass-video-container {
+    width: 90%;
+    max-width: 90vw;
+    /* Reduced height to ensure button never overlaps */
+    max-height: 45vh;
+    /* Position below banner */
+    top: calc(3vh + 300px);
+    left: 50%;
+    transform: translateX(-50%);
+    right: auto;
+    bottom: auto;
+  }
+
+  .glass-video-panel {
+    border-radius: 24px;
+    border-width: 1px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .glass-video {
+    border-radius: 24px;
+    max-height: 50vh;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    object-position: center center;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+  }
+
+  .glass-video-glow {
+    width: 110%;
+    height: 110%;
+    filter: blur(40px);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .swipe-instruction {
+    /* Position above video - video is at calc(50% - 8vh) with max-height 50vh */
+    /* Video top edge is approximately at 17vh, so position instruction at 5vh */
+    top: 5vh;
+    max-width: 85%;
+    margin-top: calc(env(safe-area-inset-top, 0) + 0.5vh);
+  }
+  
+  .swipe-instruction-content {
+    padding: 12px 18px;
+    min-width: 260px;
+  }
+  
+  .swipe-instruction-text {
+    font-size: 14px;
+  }
+
+  .floating-cta {
+    width: 90vw;
+    max-width: 90vw;
+    height: 52px;
+    min-height: 52px;
+    font-size: 15px;
+    border-radius: 20px;
+    padding: 0 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    /* Positioned to never overlap video - maintains gap */
+    bottom: calc(env(safe-area-inset-bottom) + 5vh);
+    margin-bottom: 0;
+  }
+}
+
+/* Small phones - Maintain proportional spacing, no overlap */
+@media (max-width: 360px) {
+  .floating-glass-video-container {
+    width: 92%;
+    max-width: 92vw;
+    /* Further reduced height for small screens */
+    max-height: 40vh;
+    /* Position below banner */
+    top: calc(2vh + 280px);
+    left: 50%;
+    transform: translateX(-50%);
+    right: auto;
+    bottom: auto;
+  }
+
+  .glass-video-panel {
+    border-radius: 20px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .glass-video {
+    border-radius: 20px;
+    max-height: 45vh;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    object-position: center center;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+  }
+
+  .floating-cta {
+    width: 92vw;
+    max-width: 92vw;
+    height: 50px;
+    min-height: 50px;
+    font-size: 14px;
+    padding: 0 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    /* Positioned to never overlap - maintains safe gap */
+    bottom: calc(env(safe-area-inset-bottom) + 4.5vh);
+  }
+}
+
+/* Large phones - Maintain proportional spacing, no overlap */
+@media (min-width: 481px) and (max-width: 768px) {
+  .floating-glass-video-container {
+    width: 80%;
+    max-width: 80vw;
+    /* Reduced height to prevent overlap */
+    max-height: 52vh;
+    /* Position higher to leave space for button */
+    top: calc(50% - 9vh);
+    left: 50%;
+    transform: translate(-50%, -50%);
+    right: auto;
+    bottom: auto;
+  }
+  
+  .swipe-instruction {
+    /* Position above video - video is at calc(50% - 9vh) with max-height 52vh */
+    /* Video top edge is approximately at 16vh, so position instruction at 5vh */
+    top: 5vh;
+    max-width: 85%;
+    margin-top: calc(env(safe-area-inset-top, 0) + 0.5vh);
+  }
+  
+  .swipe-instruction-content {
+    padding: 12px 18px;
+    min-width: 270px;
+  }
+  
+  .swipe-instruction-text {
+    font-size: 14px;
+  }
+  
+  .floating-cta {
+    width: 80vw;
+    max-width: 380px;
+    height: 54px;
+    min-height: 54px;
+    /* Positioned with safe gap from video */
+    bottom: calc(env(safe-area-inset-bottom) + 5.5vh);
+  }
+
+  .glass-video-panel {
+    border-radius: 26px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .glass-video {
+    border-radius: 26px;
+    max-height: 52vh;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    object-position: center center;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+  }
+}
+
+/* Landscape orientation - Maintain proportional spacing, no overlap */
+@media (max-width: 768px) and (orientation: landscape) {
+  .floating-glass-video-container {
+    max-height: 55vh;
+    width: 75%;
+    max-width: 75vw;
+    /* Maintain proportional center - same offset ratio */
+    top: calc(50% - 7vh);
+    left: 50%;
+    transform: translate(-50%, -50%);
+    right: auto;
+    bottom: auto;
+  }
+  
+  .swipe-instruction {
+    /* Position above video - video is at calc(50% - 7vh) with max-height 55vh */
+    /* Video top edge is approximately at 18vh, so position instruction at 3vh for landscape */
+    top: 3vh;
+    max-width: 75%;
+    margin-top: calc(env(safe-area-inset-top, 0) + 0.3vh);
+  }
+  
+  .swipe-instruction-content {
+    padding: 10px 16px;
+    min-width: 220px;
+  }
+  
+  .swipe-instruction-text {
+    font-size: 12px;
+  }
+  
+  .floating-cta {
+    width: 75vw;
+    max-width: 350px;
+    height: 50px;
+    min-height: 50px;
+    bottom: calc(env(safe-area-inset-bottom) + 4.5vh);
+  }
+
+  .glass-video-panel {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .glass-video {
+    max-height: 55vh;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    object-position: center center;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+  }
+
+  .swipe-instruction {
+    /* Position above video - video is at calc(50% - 7vh) with max-height 45vh */
+    /* Video top edge is approximately at 18vh, so position instruction at 4vh */
+    top: 4vh;
+    max-width: 80%;
+    margin-top: calc(env(safe-area-inset-top, 0) + 0.5vh);
+  }
+  
+  .swipe-instruction-content {
+    padding: 10px 16px;
+    min-width: 240px;
+  }
+  
+  .swipe-instruction-text {
+    font-size: 13px;
+  }
+}
+
+/* Tablet and Desktop - Maintain proportional spacing, no overlap */
+@media (min-width: 769px) {
+  .floating-glass-video-container {
+    width: 75%;
+    max-width: 800px;
+    /* Reduced height to ensure button never overlaps */
+    max-height: 60vh;
+    /* Position higher to leave space for button */
+    top: calc(50% - 10vh);
+    left: 50%;
+    transform: translate(-50%, -50%);
+    right: auto;
+    bottom: auto;
+  }
+  
+  .swipe-instruction {
+    /* Position above video - video is at calc(50% - 10vh) with max-height 60vh */
+    /* Video top edge is approximately at 15vh, so position instruction at 6vh */
+    top: 6vh;
+    max-width: 90%;
+    margin-top: calc(env(safe-area-inset-top, 0) + 0.5vh);
+  }
+  
+  .swipe-instruction-content {
+    padding: 14px 20px;
+    min-width: 300px;
+  }
+  
+  .swipe-instruction-text {
+    font-size: 15px;
+  }
+  
+  .floating-cta {
+    /* Positioned with guaranteed gap from video */
+    bottom: calc(env(safe-area-inset-bottom) + 6vh);
+    width: 75vw;
+    max-width: 400px;
+    height: 56px;
+    min-height: 56px;
+    max-height: 60px;
+  }
+
+  .glass-video-panel {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .glass-video {
+    max-height: 60vh;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    object-position: center center;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+  }
+}
