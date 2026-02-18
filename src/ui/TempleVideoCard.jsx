@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 
-const KNOW_MORE_URL = 'https://assamrto1.vercel.app/'
+const KNOW_MORE_URL = 'https://megacorp-seven.vercel.app/'
 
 export default function TempleVideoCard({ videoSrc, templeName, onVideoPlaying }) {
   const videoRef = useRef(null)
